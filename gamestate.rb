@@ -1,11 +1,26 @@
+require "json"
+
 class HangmanGamestate
   attr_reader :word
 
-  def initialize(word)
+  def initialize(word, prev_guesses = [], num_mistakes_left = 15)
     super()
     @word = word
-    @prev_guesses = []
-    @num_mistakes_left = 15
+    @prev_guesses = prev_guesses
+    @num_mistakes_left = num_mistakes_left
+  end
+
+  def to_json
+    JSON.dump ({
+      :word => @word,
+      :prev_guesses => @prev_guesses,
+      :num_mistakes_left => @num_mistakes_left
+    })
+  end
+
+  def self.from_json(string)
+    data = JSON.load string
+    self.new(data['word'], data['prev_guesses'], data['num_mistakes_left'])
   end
 
   def display
